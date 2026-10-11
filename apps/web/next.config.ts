@@ -1,0 +1,68 @@
+import bundleAnalyzer from '@next/bundle-analyzer';
+import withSerwistInit from '@serwist/next';
+import type { NextConfig } from 'next';
+import createNextIntlPlugin from 'next-intl/plugin';
+
+const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
+const withAnalyzer = bundleAnalyzer({ enabled: process.env.ANALYZE === '1' });
+// The service worker is built from src/app/sw.ts. It is disabled in `next dev` so a stale
+// cache never hides a code change while developing; `make demo` runs a production build.
+const withSerwist = withSerwistInit({
+  swSrc: 'src/app/sw.ts',
+  swDest: 'public/sw.js',
+  disable: process.env.NODE_ENV === 'development',
+  reloadOnOnline: true,
+  // the offline fallback has to be on the phone before the signal drops, not fetched after
+  additionalPrecacheEntries: [{ url: '/offline', revision: String(Date.now()) }],
+});
+
+const gateway = process.env.GATEWAY_URL ?? 'http://127.0.0.1:8080';
+const wsUrl = process.env.NEXT_PUBLIC_WS_URL ?? 'ws://localhost:8080/ws';
+
+// Content Security Policy: no third-party scripts at all. Map tiles are the only external
+// images; everything else (fonts included) is self-hosted by next/font.
+const csp = [
+  "default-src 'self'",
+  "script-src 'self' 'unsafe-inline'" + (process.env.NODE_ENV === 'development' ? " 'unsafe-eval'" : ''),
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data: blob: https://*.tile.openstreetmap.org",
+  "font-src 'self' data:",
+  `connect-src 'self' ${wsUrl} ${gateway}`,
+  "media-src 'self' blob: data:",
+  "worker-src 'self' blob:",
+  "frame-ancestors 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+].join('; ');
+
+const config: NextConfig = {
+  reactStrictMode: true,
+  poweredByHeader: false,
+  // Next 15 streams metadata into <body> for "real" browsers and keeps it in <head> only for
+  // bots. Chrome only reads <link rel="manifest"> from <head>, so the app silently wasn't
+  // installable on phones. Our metadata is static, so rendering it up front for everyone is free.
+  htmlLimitedBots: /.*/,
+  compress: true,
+  transpilePackages: ['@sm/i18n', '@sm/ui', '@sm/contracts'],
+  experimental: {
+    optimizePackageImports: ['@tanstack/react-query'],
+  },
+  images: { formats: ['image/avif', 'image/webp'] },
+  env: { NEXT_PUBLIC_WS_URL: wsUrl },
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          { key: 'Content-Security-Policy', value: csp },
+          { key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains' },
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          { key: 'Referrer-Policy', value: 'no-referrer' },
+          { key: 'Permissions-Policy', value: 'camera=(self), microphone=(self), geolocation=(self)' },
+        ],
+      },
+    ];
+  },
+};
+
+export default withSerwist(withAnalyzer(withNextIntl(config)));

@@ -1,0 +1,44 @@
+scheme_code: MUDRA_SHISHU
+apex_corp: MUDRA
+version: 1
+loan_type: micro_finance
+name:
+  en: PM MUDRA Shishu Loan (through banks)
+  hi: पीएम मुद्रा शिशु लोन (बैंक के ज़रिए)
+  bn: পিএম মুদ্রা শিশু ঋণ (ব্যাংকের মাধ্যমে)
+  mr: पीएम मुद्रा शिशु कर्ज (बँकेमार्फत)
+  te: పీఎం ముద్ర శిశు రుణం (బ్యాంకుల ద్వారా)
+  ta: பிஎம் முத்ரா ஷிஷு கடன் (வங்கிகள் மூலம்)
+  gu: પીએમ મુદ્રા શિશુ લોન (બેંક મારફતે)
+  ur: پی ایم مدرا شیشو قرض (بینکوں کے ذریعے)
+  kn: ಪಿಎಂ ಮುದ್ರಾ ಶಿಶು ಸಾಲ (ಬ್ಯಾಂಕುಗಳ ಮೂಲಕ)
+  or: ପିଏମ୍ ମୁଦ୍ରା ଶିଶୁ ଋଣ (ବ୍ୟାଙ୍କ ମାଧ୍ୟମରେ)
+  ml: പിഎം മുദ്ര ശിശു വായ്പ (ബാങ്കുകൾ വഴി)
+  pa: ਪੀਐਮ ਮੁਦਰਾ ਸ਼ਿਸ਼ੂ ਕਰਜ਼ਾ (ਬੈਂਕਾਂ ਰਾਹੀਂ)
+  as: পিএম মুদ্ৰা শিশু ঋণ (বেংকৰ জৰিয়তে)
+source_url: https://www.mudra.org.in/Offerings
+verified_on: 2026-10-11
+needs_verification: true
+notes: >
+  Checked on mudra.org.in/Offerings on 2026-10-11: Shishu covers loans up to Rs 50,000 for non-farm
+  income-generating micro enterprises (Kishor above Rs 50,000 to Rs 5 lakh, Tarun to Rs 10 lakh, Tarun Plus
+  to Rs 20 lakh). MUDRA states no age or income test. Banks set the rate and tenure, so the 11.5% and
+  3-year values below are only for the EMI preview - hence needs_verification.
+effective_from: 2026-10-11
+params:
+  max_loan_paise: 5000000
+eligibility:
+  - { id: loan_amount, kind: loan_max }
+documents_required:
+  - { type: aadhaar, required: true }
+  - { type: bank_passbook, required: true }
+  - { type: project_quotation, required: false }
+loan_limits: { min_paise: 0, max_paise: 5000000 }
+funding_pattern: { apex_bps: 10000, partner_bps: 0, beneficiary_bps: 0 }
+interest:
+  slabs:
+    - { upto_paise: 5000000, rate_bps: 1150 }
+moratorium: { default_months: 0, max_months: 6, treatment: interest_paid_monthly }
+repayment: { default_tenure_months: 36, max_tenure_months: 60, frequency: monthly }
+channel_partner_types: [PSB, RRB]
+processing_days: 15

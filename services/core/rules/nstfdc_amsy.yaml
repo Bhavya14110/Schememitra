@@ -1,0 +1,50 @@
+scheme_code: NSTFDC_AMSY
+apex_corp: NSTFDC
+version: 1
+loan_type: women_scheme
+name:
+  en: NSTFDC Adivasi Mahila Sashaktikaran Yojana
+  hi: NSTFDC आदिवासी महिला सशक्तिकरण योजना
+  bn: NSTFDC আদিবাসী মহিলা সশক্তিকরণ যোজনা
+  mr: NSTFDC आदिवासी महिला सक्षमीकरण योजना
+  te: NSTFDC ఆదివాసీ మహిళా సశక్తీకరణ యోజన
+  ta: NSTFDC ஆதிவாசி மகளிர் அதிகாரமளிப்புத் திட்டம்
+  gu: NSTFDC આદિવાસી મહિલા સશક્તિકરણ યોજના
+  ur: NSTFDC آدیواسی مہیلا سشکتی کرن یوجنا
+  kn: NSTFDC ಆದಿವಾಸಿ ಮಹಿಳಾ ಸಶಕ್ತೀಕರಣ ಯೋಜನೆ
+  or: NSTFDC ଆଦିବାସୀ ମହିଳା ସଶକ୍ତିକରଣ ଯୋଜନା
+  ml: NSTFDC ആദിവാസി മഹിളാ ശാക്തീകരണ യോജന
+  pa: NSTFDC ਆਦਿਵਾਸੀ ਮਹਿਲਾ ਸਸ਼ਕਤੀਕਰਨ ਯੋਜਨਾ
+  as: NSTFDC আদিবাসী মহিলা সৱলীকৰণ যোজনা
+source_url: https://nstfdc.tribal.gov.in/frm_amsy.aspx
+verified_on: 2026-10-11
+needs_verification: true
+notes: >
+  Checked on nstfdc.tribal.gov.in on 2026-10-11: a concessional scheme for Scheduled Tribe women, up to
+  Rs 2 lakh per unit with up to 90% from NSTFDC, no promoter contribution insisted on, quarterly repayment
+  within 5 years. NSTFDC's general rule (income up to Rs 3,00,000) applies. The rate table on the page is
+  garbled; 4% to the beneficiary is our best reading, so needs_verification stays true until confirmed.
+effective_from: 2026-10-11
+params:
+  categories: [st]
+  income_limit_paise: 30000000
+  max_project_cost_paise: 20000000
+eligibility:
+  - { id: women, kind: women_only }
+  - { id: category, kind: category_in }
+  - { id: income, kind: income_max }
+  - { id: project_cost, kind: project_cost_max }
+documents_required:
+  - { type: aadhaar, required: true }
+  - { type: caste_certificate, required: true }
+  - { type: income_certificate, required: true, validity_months: 12 }
+  - { type: bank_passbook, required: true }
+loan_limits: { min_paise: 0, max_paise: 18000000 }
+funding_pattern: { apex_bps: 9000, partner_bps: 1000, beneficiary_bps: 0 }
+interest:
+  slabs:
+    - { upto_paise: 18000000, rate_bps: 400 }
+moratorium: { default_months: 0, max_months: 0, treatment: interest_paid_monthly }
+repayment: { default_tenure_months: 60, max_tenure_months: 60, frequency: quarterly }
+channel_partner_types: [SCA]
+processing_days: 30

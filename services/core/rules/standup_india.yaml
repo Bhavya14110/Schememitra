@@ -1,0 +1,71 @@
+scheme_code: STANDUP_INDIA
+apex_corp: SIDBI
+version: 1
+loan_type: term_loan
+name:
+  en: Stand-Up India
+  hi: स्टैंड-अप इंडिया
+  bn: স্ট্যান্ড-আপ ইন্ডিয়া
+  mr: स्टँड-अप इंडिया
+  te: స్టాండ్-అప్ ఇండియా
+  ta: ஸ்டாண்ட்-அப் இந்தியா
+  gu: સ્ટેન્ડ-અપ ઇન્ડિયા
+  ur: اسٹینڈ اپ انڈیا
+  kn: ಸ್ಟ್ಯಾಂಡ್-ಅಪ್ ಇಂಡಿಯಾ
+  or: ଷ୍ଟାଣ୍ଡ-ଅପ୍ ଇଣ୍ଡିଆ
+  ml: സ്റ്റാൻഡ്-അപ്പ് ഇന്ത്യ
+  pa: ਸਟੈਂਡ-ਅੱਪ ਇੰਡੀਆ
+  as: ষ্টেণ্ড-আপ ইণ্ডিয়া
+source_url: https://www.standupmitra.in/Home/SUISchemes
+verified_on: 2026-10-11
+needs_verification: true
+notes: >
+  Checked on standupmitra.in on 2026-10-11: SC/ST and/or women, above 18, composite loan Rs 10 lakh to
+  Rs 1 crore, greenfield (first venture) only, 51% SC/ST/woman holding for non-individuals, no default to
+  any bank, borrower brings at least 10% of project cost, repayable in 7 years with up to 18 months
+  moratorium. The rate is set by the bank (lowest for the category, capped at MCLR + 3% + tenor premium),
+  so the 10.5% below is only for the EMI preview - that is why needs_verification stays true.
+  Greenfield and no-default are checked by the bank; we don't ask for them.
+effective_from: 2026-10-11
+params:
+  categories: [sc, st]
+  min_age: 18
+  min_loan_paise: 100000000
+  max_loan_paise: 1000000000
+eligibility:
+  - id: sc_st_or_women
+    kind: custom
+    logic: { or: [{ in: [{ var: social_category }, { param: categories }] }, { "==": [{ var: gender }, female] }] }
+    fields: [social_category, gender]
+    pass_key: rules.c.sc_st_or_women_ok
+    fail_key: rules.c.sc_st_or_women_fail
+  - id: age
+    kind: custom
+    logic: { ">=": [{ var: age }, { param: min_age }] }
+    fields: [age]
+    pass_key: rules.c.age_min_ok
+    fail_key: rules.c.age_min_fail
+    sentence: { value: { var: age, type: number }, min: { param: min_age, type: number } }
+  - id: loan_floor
+    kind: custom
+    logic: { ">=": [{ var: loan_needed_paise }, { param: min_loan_paise }] }
+    fields: [loan_needed_paise]
+    pass_key: rules.c.loan_min_ok
+    fail_key: rules.c.loan_min_fail
+    sentence: { value: { var: loan_needed_paise, type: money }, limit: { param: min_loan_paise, type: money } }
+  - { id: loan_amount, kind: loan_max }
+documents_required:
+  - { type: aadhaar, required: true }
+  - { type: caste_certificate, required: false }
+  - { type: bank_passbook, required: true }
+  - { type: project_quotation, required: true }
+loan_limits: { min_paise: 100000000, max_paise: 1000000000 }
+# bank loan 85%, margin money from convergence schemes up to 5%, borrower at least 10% (per the source)
+funding_pattern: { apex_bps: 8500, partner_bps: 500, beneficiary_bps: 1000 }
+interest:
+  slabs:
+    - { upto_paise: 1000000000, rate_bps: 1050 }
+moratorium: { default_months: 6, max_months: 18, treatment: interest_paid_monthly }
+repayment: { default_tenure_months: 84, max_tenure_months: 84, frequency: monthly }
+channel_partner_types: [PSB, RRB]
+processing_days: 30

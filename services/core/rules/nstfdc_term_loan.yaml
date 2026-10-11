@@ -1,0 +1,54 @@
+scheme_code: NSTFDC_TERM_LOAN
+apex_corp: NSTFDC
+version: 1
+loan_type: term_loan
+name:
+  en: NSTFDC Term Loan
+  hi: NSTFDC टर्म लोन
+  bn: NSTFDC মেয়াদি ঋণ
+  mr: NSTFDC मुदत कर्ज
+  te: NSTFDC టర్మ్ లోన్
+  ta: NSTFDC கால கடன்
+  gu: NSTFDC ટર્મ લોન
+  ur: NSTFDC ٹرم لون
+  kn: NSTFDC ಅವಧಿ ಸಾಲ
+  or: NSTFDC ଅବଧି ଋଣ
+  ml: NSTFDC ടേം ലോൺ
+  pa: NSTFDC ਟਰਮ ਲੋਨ
+  as: NSTFDC ম্যাদী ঋণ
+source_url: https://nstfdc.tribal.gov.in/frm_term_loan.aspx
+verified_on: 2026-10-11
+needs_verification: false
+notes: >
+  Checked on nstfdc.tribal.gov.in (term loan and eligibility pages) on 2026-10-11: Scheduled Tribe
+  applicants, annual family income up to Rs 3,00,000 (rural and urban), units up to Rs 50 lakh, NSTFDC
+  lends up to 90%, beneficiary rates 6% up to Rs 5 lakh, 8% up to Rs 10 lakh, 10% above; quarterly
+  repayment within 5 years including moratorium. The page gives no moratorium length, so none is offered
+  here. Promoter contribution is 0-5% by unit cost; 5% is used below, with the SCA covering the rest.
+  In Gujarat the channel is the Gujarat Tribal Development Corporation.
+effective_from: 2026-10-11
+params:
+  categories: [st]
+  income_limit_paise: 30000000
+  max_project_cost_paise: 500000000
+eligibility:
+  - { id: category, kind: category_in }
+  - { id: income, kind: income_max }
+  - { id: project_cost, kind: project_cost_max }
+documents_required:
+  - { type: aadhaar, required: true }
+  - { type: caste_certificate, required: true }
+  - { type: income_certificate, required: true, validity_months: 12 }
+  - { type: bank_passbook, required: true }
+  - { type: project_quotation, required: true }
+loan_limits: { min_paise: 0, max_paise: 450000000 }
+funding_pattern: { apex_bps: 9000, partner_bps: 500, beneficiary_bps: 500 }
+interest:
+  slabs:
+    - { upto_paise: 50000000, rate_bps: 600 }
+    - { upto_paise: 100000000, rate_bps: 800 }
+    - { upto_paise: 450000000, rate_bps: 1000 }
+moratorium: { default_months: 0, max_months: 0, treatment: interest_paid_monthly }
+repayment: { default_tenure_months: 60, max_tenure_months: 60, frequency: quarterly }
+channel_partner_types: [SCA, PSB, RRB]
+processing_days: 30

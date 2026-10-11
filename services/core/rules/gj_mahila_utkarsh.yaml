@@ -1,0 +1,65 @@
+scheme_code: GJ_MAHILA_UTKARSH
+apex_corp: GUJARAT
+version: 1
+loan_type: women_scheme
+name:
+  en: Mukhyamantri Mahila Utkarsh Yojana (Gujarat)
+  hi: मुख्यमंत्री महिला उत्कर्ष योजना (गुजरात)
+  bn: মুখ্যমন্ত্রী মহিলা উৎকর্ষ যোজনা (গুজরাট)
+  mr: मुख्यमंत्री महिला उत्कर्ष योजना (गुजरात)
+  te: ముఖ్యమంత్రి మహిళా ఉత్కర్ష యోజన (గుజరాత్)
+  ta: முதலமைச்சர் மகிளா உத்கர்ஷ் யோஜனா (குஜராத்)
+  gu: મુખ્યમંત્રી મહિલા ઉત્કર્ષ યોજના (ગુજરાત)
+  ur: مکھیہ منتری مہیلا اتکرش یوجنا (گجرات)
+  kn: ಮುಖ್ಯಮಂತ್ರಿ ಮಹಿಳಾ ಉತ್ಕರ್ಷ ಯೋಜನೆ (ಗುಜರಾತ್)
+  or: ମୁଖ୍ୟମନ୍ତ୍ରୀ ମହିଳା ଉତ୍କର୍ଷ ଯୋଜନା (ଗୁଜରାଟ)
+  ml: മുഖ്യമന്ത്രി മഹിളാ ഉത്കർഷ് യോജന (ഗുജറാത്ത്)
+  pa: ਮੁੱਖ ਮੰਤਰੀ ਮਹਿਲਾ ਉਤਕਰਸ਼ ਯੋਜਨਾ (ਗੁਜਰਾਤ)
+  as: মুখ্যমন্ত্ৰী মহিলা উৎকৰ্ষ যোজনা (গুজৰাট)
+source_url: https://www.myscheme.gov.in/schemes/mmuy
+verified_on: 2026-10-11
+needs_verification: false
+notes: >
+  Checked on myscheme.gov.in (Government of India scheme portal) on 2026-10-11: women who are permanent
+  residents of Gujarat, 18 or older, at least class 8 pass, valid Aadhaar, no income limit; interest-free
+  collateral-free loans up to Rs 1 lakh repayable over up to 5 years; government employees excluded (the
+  bank checks that). Our education buckets are coarse ("up to class 10" may include class 6-7), so the
+  class-8 condition counts "up to class 10" and above as a pass and the marksheet settles it. The 2017
+  launch reports describe loans to women's groups (JLEGs); myscheme describes individual loans - flagged
+  for confirmation with the department.
+effective_from: 2026-10-11
+params:
+  states: [GJ]
+  min_age: 18
+  schooling: [secondary, higher_secondary, diploma, graduate, postgraduate]
+  max_loan_paise: 10000000
+eligibility:
+  - { id: women, kind: women_only }
+  - { id: state, kind: state_in }
+  - id: age
+    kind: custom
+    logic: { ">=": [{ var: age }, { param: min_age }] }
+    fields: [age]
+    pass_key: rules.c.age_min_ok
+    fail_key: rules.c.age_min_fail
+    sentence: { value: { var: age, type: number }, min: { param: min_age, type: number } }
+  - id: schooling
+    kind: custom
+    logic: { in: [{ var: education_level }, { param: schooling }] }
+    fields: [education_level]
+    pass_key: rules.c.education_ok
+    fail_key: rules.c.education_fail
+  - { id: loan_amount, kind: loan_max }
+documents_required:
+  - { type: aadhaar, required: true }
+  - { type: marksheet, required: true }
+  - { type: bank_passbook, required: true }
+loan_limits: { min_paise: 0, max_paise: 10000000 }
+funding_pattern: { apex_bps: 10000, partner_bps: 0, beneficiary_bps: 0 }
+interest:
+  slabs:
+    - { upto_paise: 10000000, rate_bps: 0 }
+moratorium: { default_months: 0, max_months: 0, treatment: interest_paid_monthly }
+repayment: { default_tenure_months: 60, max_tenure_months: 60, frequency: monthly }
+channel_partner_types: [PSB, RRB]
+processing_days: 30
